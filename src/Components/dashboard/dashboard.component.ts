@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [UsersListComponent, UserActivityGraphComponent,
     
     MatCardModule,

@@ -8,11 +8,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Roles } from '../../Models/roles';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule,RouterLink,MatInputModule,MatCardModule
-    ,MatFormFieldModule,MatButtonModule],
+  standalone: true,
+  imports: [ReactiveFormsModule,RouterLink,MatInputModule,MatCardModule,MatFormFieldModule,MatButtonModule,MatSnackBarModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -25,7 +26,7 @@ export class LoginComponent {
   @Output() formClose = new EventEmitter<void>();
   @Input() showForm = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: MatSnackBar) { }
 
   ngOnInit():void {
     this.logInForm = this.fb.group({
@@ -47,10 +48,12 @@ export class LoginComponent {
             this.authService.isAuth=true;
             this.authService.role=res.role;
             this.authService.userId = res.userId;
-            alert('Login successful!');
+            this.snackBar.open('Login successful!', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
             this.router.navigate(['/']);
           },
-          error: (err) => alert('Login failed: ' + err.error.message)
+          error: (err) => {
+          this.snackBar.open('Error: ' + err.message, 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+        }
         });
         this.logInForm?.reset();
         this.formClose.emit();

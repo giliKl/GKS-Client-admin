@@ -1,96 +1,33 @@
-<!-- 
-@if(getAuthServiceRole() == "teacher") {
-    <button pButton label="Add Course" icon="pi pi-plus" class="icon-button p-button-success add-course-btn" (click)="add()"><i class="pi pi-plus"></i></button>
-}
-
-<div class="card course-table-container">
-    <p-table [value]="courses" [tableStyle]="{'min-width': '60rem'}" [paginator]="true" [rows]="5">
-        <ng-template pTemplate="header">
-            <tr>
-                <th pSortableColumn="title">
-                    Course <p-sortIcon field="title"></p-sortIcon>
-                </th>
-                <th>Description</th>
-                @if(getAuthServiceRole() == "student") {
-                    <th>Un/enroll</th>
-                }
-                @if(getAuthServiceRole() == "teacher") {
-                    <th>Edit</th>
-                    <th>Delete</th>
-                }
-                <th>More Details</th>
-            </tr>
-        </ng-template>
-        
-        <ng-template pTemplate="body" let-course let-rowIndex="rowIndex">
-            <tr [ngClass]="{ 'even-row': rowIndex % 2 === 0, 'odd-row': rowIndex % 2 !== 0 }">
-                <td>{{ course.title }}</td>
-                <td>{{ course.description }}</td>
-
-                @if(getAuthServiceRole() == "student") {
-                    <td>
-                        @if(getAuthServiceRole() == "student" &&!(isEnrolled(course.id) | async)){
-                            <button pButton  label="Enroll" icon="pi pi-user-plus" class="icon-button p-button-rounded p-button-primary" (click)="enroll(course.id)"><i class="pi pi-user-plus"></i></button>
- 
-                        }
-                        @else {
-                            <button pButton label="Unenroll" icon="pi pi-user-minus" class="icon-button p-button-rounded p-button-warning" (click)="unenroll(course.id)"><i class="pi pi-user-minus"></i></button>
-
-                        }
-                    </td>
-                }
-
-                @if(getAuthServiceRole() == "teacher") {
-                    <td>
-                        <button pButton icon="pi pi-pencil" class="icon-button p-button-rounded p-button-info" (click)="update(course)"><i class="pi pi-pencil"></i></button>
-                    </td>
-                    <td>
-                        <button pButton icon="pi pi-trash" class="icon-button p-button-rounded p-button-danger" (click)="deleteCourse(course.id)"><i class="pi pi-trash"></i></button>
-                    </td>
-                }
-
-                <td>
-                    <button pButton icon="pi pi-eye" class="icon-button p-button-rounded p-button-secondary" (click)="showCourse(course.id)"><i class="pi pi-eye"></i></button>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-    <a routerLink="/" class="course-card">
-        <mat-icon class="arrow-icon">arrow_back</mat-icon>
-      </a>
-</div> -->
-@if(getAuthServiceRole() == "admin") {
-    <button pButton label="Add User" icon="pi pi-plus" class="icon-button p-button-success add-user-btn" (click)="add()"></button>
-}
-
 <div class="card user-table-container">
     <p-table [value]="users" [tableStyle]="{'min-width': '60rem'}" [paginator]="true" [rows]="5">
         <ng-template pTemplate="header">
             <tr>
-                <th pSortableColumn="name">
-                    Name <p-sortIcon field="name"></p-sortIcon>
-                </th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Edit</th>
-                <th>Delete</th>
-                <th>More Details</th>
+                <th class="title" pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                <th pSortableColumn="name" class="title">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th class="title">Email</th>
+                <th class="title">Status</th>
+                <th class="title">Send Email</th>
             </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="body" let-user let-rowIndex="rowIndex">
             <tr [ngClass]="{ 'even-row': rowIndex % 2 === 0, 'odd-row': rowIndex % 2 !== 0 }">
+                <td class="col" >{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
                 <td>
-                    <button pButton icon="pi pi-pencil" class="icon-button p-button-rounded p-button-info" (click)="updateUser(user)"><i class="pi pi-pencil"></i></button>
+                    @if(!user.isActive){
+                    <button pButton  icon="pi pi-ban" class="icon-button p-button-rounded p-button-success"
+                        (click)="openConfirmationDialog(user.id, 'unblock')" ></button>
+                    }
+                    @else {
+                    <button pButton icon="pi pi-check-circle" class="icon-button p-button-rounded p-button-warning"
+                        (click)="openConfirmationDialog(user.id, 'block')"></button>
+                    }
                 </td>
                 <td>
-                    <button pButton icon="pi pi-trash" class="icon-button p-button-rounded p-button-danger" (click)="deleteUser(user.id)"><i class="pi pi-trash"></i></button>
-                </td>
-                <td>
-                    <button pButton icon="pi pi-eye" class="icon-button p-button-rounded p-button-secondary" (click)="showUserDetails(user.id)"><i class="pi pi-eye"></i></button>
+                    <button pButton icon="pi pi-envelope" class="icon-button p-button-rounded p-button-primary"
+                        (click)="sendEmail(user.id)"></button>
                 </td>
             </tr>
         </ng-template>
@@ -100,3 +37,25 @@
     </a>
 </div>
 
+<p-dialog header="Verify action" [(visible)]="displayDialog" [modal]="true" [style]="{width: '500px'}">
+    <div class="dialog-content">
+        <i class="pi" [ngClass]="actionType === 'block' ? 'pi-lock' : 'pi-unlock'"
+            [style.color]="actionType === 'block' ? 'red' : 'green'"
+            style="font-size: 3rem; display: block; text-align: center; margin-bottom: 10px;"></i>
+        <h3 style="text-align: center; color: #444;">
+            Are you sure you want to <span [style.color]="actionType === 'block' ? 'red' : 'green'">{{ actionType
+                }}</span> this user?
+        </h3>
+        <p style="text-align: center; font-size: 0.9rem; color: gray;">This action can be reversed later.</p>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton label="Cancel" icon="pi pi-times" class="p-button-secondary"
+            (click)="displayDialog=false"></button>
+        <button pButton label="Confirm" icon="pi pi-check"
+            [ngClass]="actionType === 'block' ? 'p-button-danger' : 'p-button-success'" (click)="confirmAction()"
+            [style]="{marginLeft: '10px'}">
+        </button>
+    </ng-template>
+</p-dialog>

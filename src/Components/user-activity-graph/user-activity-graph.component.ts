@@ -4,6 +4,7 @@ import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-user-activity-graph',
+  standalone: true,
   imports: [],
   templateUrl: './user-activity-graph.component.html',
   styleUrl: './user-activity-graph.component.css'

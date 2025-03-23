@@ -62,3 +62,9 @@
   .social-icon i:hover {
     color: #1da1f2;  /* צבע כחול עבור hover בטוויטר */
   }
+
+  .logo{
+    width: 35px;
+    height: auto;
+    margin-right: 10px;
+  }

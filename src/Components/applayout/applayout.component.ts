@@ -9,6 +9,7 @@ import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-applayout',
+  standalone: true,
   imports: [RouterLink,RouterOutlet,MatToolbarModule,MatIconModule,MatButtonModule,MatListModule,MatChipsModule],
   templateUrl: './applayout.component.html',
   styleUrl: './applayout.component.css'
