@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {  Observable } from 'rxjs';
 import { partOfUser, User } from '../Models/user';
 
 @Injectable({
@@ -9,17 +9,18 @@ import { partOfUser, User } from '../Models/user';
 export class AuthService {
 
   constructor(private http: HttpClient) {}
-  private apiUrl = 'http://localhost:3000/api/Auth';
+  private apiUrl =`http://localhost:3000/api/Auth`;
   public isAuth: boolean = false;
   public userId: number = 0;
   public role: string = "";
+
 
   register(user: User): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user); // שינוי - שולח רק user
   }
 
   login(credentials: partOfUser): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
   saveToken(token: string, user: any) {
@@ -40,4 +41,6 @@ export class AuthService {
     sessionStorage.removeItem('adminToken');
     sessionStorage.removeItem('user');
   }
+ 
+  
 }

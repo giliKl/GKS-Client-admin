@@ -10,12 +10,11 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
-import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule, TableModule, RouterLink, MatIconModule, DialogModule, ButtonModule,TextareaModule,FormsModule,Tooltip],
+  imports: [CommonModule, TableModule, RouterLink, MatIconModule, DialogModule, ButtonModule,TextareaModule,FormsModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
