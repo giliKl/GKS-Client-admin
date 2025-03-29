@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { partOfUser } from '../../Models/user';
 import { AuthService } from '../../Services/auth.service';
 import {  FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,7 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterLink,MatInputModule,MatCardModule,MatFormFieldModule,MatButtonModule,MatSnackBarModule],
+  imports: [ReactiveFormsModule,MatInputModule,MatCardModule,MatFormFieldModule,MatButtonModule,MatSnackBarModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
