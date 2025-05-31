@@ -3,8 +3,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../Models/user';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Roles } from '../Models/roles';
-import { environment } from './environment.prod';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
